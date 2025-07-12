@@ -10,6 +10,11 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+// Set OPENAI_API_KEY to GROQ_API_KEY for compatibility
+if (process.env.GROQ_API_KEY && !process.env.OPENAI_API_KEY) {
+  process.env.OPENAI_API_KEY = process.env.GROQ_API_KEY;
+}
+
 const app = express();
 const PORT = process.env.PORT;
 
