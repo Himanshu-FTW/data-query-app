@@ -1,0 +1,21 @@
+name: data-query-app
+services:
+  - name: web
+    source_dir: /
+    dockerfile_path: Dockerfile
+    github:
+      repo: your-username/your-repo-name
+      branch: main
+    environment_slug: docker
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: GROQ_API_KEY
+        value: ${GROQ_API_KEY}
+        type: SECRET
+    health_check:
+      http_path: /api/health 

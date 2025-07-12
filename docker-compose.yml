@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  data-query-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - GROQ_API_KEY=${GROQ_API_KEY:-your-groq-api-key-here}
+    volumes:
+      - ./server/uploads:/app/server/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development service (optional)
+  data-query-app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - GROQ_API_KEY=${GROQ_API_KEY:-your-groq-api-key-here}
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/client/node_modules
+      - /app/server/node_modules
+    profiles:
+      - dev
+    restart: unless-stopped 

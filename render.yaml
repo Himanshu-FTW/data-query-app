@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: data-query-app
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: node server/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GROQ_API_KEY
+        sync: false
+    healthCheckPath: /api/health
+    autoDeploy: true 
